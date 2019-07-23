@@ -1,9 +1,9 @@
 # CMCC-SPTN-SBI-YANG
 This project defines the YANG files used in SPTN (Software defined Packet Transport Network) southbound API ＆ definition of MPLS-TP OpenFlow protocol extensions for SPTN to accomplish the management and control of SPTN equipment.
 
-sptn-ttp-2019.json is to give the definition of OpenFlow extensions for SPTN, which explains every filed needed in the extended OpenFlow table/group.
+1. sptn-ttp-2019.json is to give the definition of OpenFlow extensions for SPTN, which explains every filed needed in the extended OpenFlow table/group.
 
-SPTN-SBI-YANG folder contains all the YANG files used in SPTN SBI. All the YANG files are defined based on OF-CONFIG V1.2. The folder includes:
+2. SPTN-SBI-YANG folder contains all the YANG files used in SPTN SBI. All the YANG files are defined based on OF-CONFIG V1.2. The folder includes:
 - of-config-1.2.yang (basic OF-CONFIG specification)
 - of-config-1.2-sptn-alarm.yang
 - of-config-1.2-sptn-ces.yang (SPTN CES service module)
