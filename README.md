@@ -16,6 +16,6 @@ This project defines the YANG files used in SPTN (Software defined Packet Transp
 - of-config-1.2-sptn-qos.yang
 - of-config-1.2-sptn-vpls.yang
 
-This repository is created by CAICT(China Academy of Information Communications Technology) to support the China Mobile (CMCC) SPTN project. 
+This repository is created to support the China Mobile (CMCC) SPTN project. 
 
 Any questions about this repository, please contact wangminxue@chinamobile.com, xuyunbin@caict.ac.cn or zhaoxing@caict.ac.cn.
