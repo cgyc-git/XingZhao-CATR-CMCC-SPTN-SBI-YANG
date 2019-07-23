@@ -1,0 +1,480 @@
+module of-config-1.2-sptn-l2vpn {
+    namespace 'http://chinamobile.com.cn/sdn/sptn/sbi/schema/l2vpn' ;
+    prefix "sptn-l2vpn";
+
+    import of-config-1.2 { 
+        prefix of-config; 
+    }
+    import ietf-yang-types { 
+        prefix yang; 
+    }
+    import yang-ext {
+        prefix "ext";
+    }
+
+     organization "SPTN Working Group";
+    
+     description "SPTN VPLS Yang Module";
+
+     revision "2019-03-15" {
+       description "initial";
+     }
+
+    typedef service-type{
+       type enumeration {
+         enum "elan" {
+           value 0;
+           description "E-LAN Service type";
+         }
+         enum "etree" {
+           value 1;
+           description "E-TREE Service type";
+         }
+       }
+    }
+
+    typedef rule-type{
+       type enumeration {
+         enum "drop" {
+           value 0;
+           description "drop";
+         }
+         enum "flood" {
+           value 1;
+           description "flood";
+         }
+       }
+    }
+
+    typedef encapsulation-type {
+        type enumeration {
+         enum "raw" {
+           value 0;
+           description "raw";
+         }
+         enum "tag" {
+           value 1;
+           description "tag";
+         }
+       }
+    }
+
+    typedef action-type{
+        type enumeration{
+            enum same{
+                value 0;
+            }
+            enum add{
+                value 1;
+            }
+            enum delete{
+                value 2;
+            }
+            enum modify{
+                 value 3;
+            }
+        }
+    }
+
+    typedef role-type{
+        type enumeration{
+            enum root{
+                value 0;
+            }
+            enum leaf{
+                value 1;
+            }
+        }
+    }
+    typedef tpid-type{
+        type enumeration{
+            enum 0x88a8{
+                value 0;
+            }
+            enum 0x8100{
+                 value 1;
+            }
+            enum 0x9100{
+                value 2;
+            }
+            enum 0xffff{
+                value 3;
+            }
+        }
+    }
+
+    typedef payload-type {
+        type enumeration{
+            enum unknown{
+                value 0;
+            }
+            enum eth{
+                value 1;
+            }
+            enum ces{
+                value 2;
+            }
+        }
+    }
+
+
+    grouping vsi-grouping {
+        list vsi {
+            description
+                "The basic atributes of vsi.";
+            key "resource-id";
+
+            uses of-config:OFResourceType;
+
+            leaf vsi-id {
+                type uint32;
+            
+                description
+                    "VPLS ID";
+            }
+            leaf vsi-name {
+                type string;
+            
+                description
+                    "VPLS name";
+            }
+            leaf description {
+                type string;
+            
+                description
+                    "The description information of vsi.";
+            }
+            leaf type {
+                type service-type;
+            
+                description
+                    "";
+            }
+            leaf encapsulation-mode {
+                type encapsulation-type;
+            
+                description
+                    "";
+            }
+            container mac {
+                description
+                    "";
+                leaf mac-address-limit {
+                    type uint16;
+                
+                    description
+                        "The max value of mac address forwording items";
+                }
+                leaf forwording-rule {
+                    type rule-type;
+                
+                    description
+                        "The packet forwording rule when the mac address forwording items full";
+                }
+                leaf mac-learning {
+                    type boolean;
+                
+                    description
+                        "The flag of mac address learning.true:enable.false :disable";
+                }
+                leaf mac-aging {
+                    type boolean;
+                
+                    description
+                        "The flag of mac address aging.true:enable.false :disable";
+                }
+                leaf broadcast-control {
+                    type boolean;
+                
+                    description
+                        "The flag of brodacast packets forwording limit.true means limit,false means unlimit.";
+                }
+                leaf muticast-control {
+                    type boolean;
+                
+                    description
+                        "The flag of muticast packets forwording limit.true means limit,false means unlimit.";
+                }
+                leaf unknown-unicast-control {
+                    type boolean;
+                
+                    description
+                        "The flag of unkown unicast packets forwording limit.true means limit,false means unlimit.";
+                }
+            }
+            
+        }
+    }
+
+    grouping tunnel-grouping {
+        list tunnel {
+            key "resource-id";
+        
+            description
+                "";
+            uses of-config:OFResourceType;
+        
+            leaf name {
+                type string;
+        
+                description
+                    "Tunnnel name";
+            }
+            leaf description {
+                type string;
+            
+                description
+                    "Tunnel description";
+            }
+            leaf in-label {
+                type uint32;
+            
+                description
+                    "In label of tunnel.";
+            }
+            leaf out-label {
+                type uint32;
+            
+                description
+                    "Out label of tunnel.";
+            }
+            leaf peer-ip-address {
+                type inet:ip-address;
+            
+                description
+                    "";
+            }
+            leaf carried-port {
+                type leafref {
+                    path "/of-config:capable-switch/of-config:resources/of-config:port/of-config:resource-id";
+                }
+                description
+                    "The carried port ref of the tunnel. ";
+            }
+            leaf next-ip-address {
+                type inet:ip-address;
+            
+                description
+                    "";
+            }
+            leaf ttl {
+                type uint16;
+            
+                description
+                    "";
+            }
+        }
+    }
+
+    grouping pw-grouping {
+        list pw {
+            key "resource-id";
+        
+            description
+                "";
+            uses of-config:OFResourceType;
+
+            leaf pw-id {
+                type uint32;
+            
+                description
+                    "The identifier of pw.";
+            }
+
+            leaf pw-name {
+                type string;
+            
+                description
+                    "The name of pw";
+            }
+            leaf pw-role {
+                type role-type;
+            
+                description
+                    "The role type of pw.root, leaf";
+            }
+
+            leaf carried-tunnel {
+                type leafref {
+                    path "/of-config:capable-switch/of-config:resources/of-config:tunnel/of-config:resource-id";
+                }
+            }
+            leaf local-label {
+                type uint32;
+        
+                description
+                "The local label of pw";
+            }
+
+            leaf remote-label {
+                type uint32;
+        
+                description
+                    "The remote label of pw";
+            }
+
+            leaf pw-peer-address {
+                type inet:ipv4-address;
+        
+                description
+                    "";
+            }        
+            leaf vlan-action { 
+                type action-type;
+                description
+                    "";
+            }
+            leaf diffv-vlan {
+                type uint32;
+                description
+                    "";
+            }
+
+            leaf vlan-priority {
+                type uint16;
+                description
+                    "";
+            }
+
+            leaf vlan-tpid {
+                type tpid-type;
+                description
+                    "";
+            }
+
+            leaf match-tpid {
+                type tpid-type;
+                description
+                    "";
+            }
+            leaf control-word {
+                type boolean;
+                description
+                    "The flag whether using control word.true,false";
+            }
+
+            leaf vsi {
+                type leafref {
+                    path "/of-config:capable-switch/of-config:resources/of-config:vsi/of-config:resource-id";
+                }
+            }
+        }
+    }
+
+    grouping ac-grouping {
+        list ac {
+            key "resource-id";
+        
+            description
+                "";
+            uses of-config:OFResourceType;
+
+            leaf name {
+                type string;
+            
+                description
+                    "The ac name.";
+            }
+            leaf payload-type {
+                type payload-type;
+            
+                description
+                    "The payload type:eth,ces";
+            }
+            leaf uni-port {
+                type leafref {
+                    path "/of-config:capable-switch/of-config:resources/of-config:port/of-config:resource-id";
+                }
+                description
+                    "The carried uni port ref of the pw. ";
+            }
+            leaf ac-role {
+                type role-type;
+            
+                description
+                    "root,leaf";
+            }
+            leaf client-vlan-id {
+                type uint16;
+        
+                description
+                    "The client vlan id of ac.";
+            }
+            leaf provider-vlan-id {
+                type uint16;
+        
+                description
+                    "The provider vlan id of ac.";
+            }
+
+            leaf match-tpid {
+                type string;
+        
+                description
+                "The matched tpid of the ac.";
+            }
+            leaf vsi {
+                type leafref {
+                    path "/of-config:capable-switch/of-config:resources/of-config:vsi/of-config:resource-id";
+                }
+            }
+            container vlan-action {
+                description
+                    "The related atributes of vlan output action.";
+                leaf vlan-output-action {
+                    type action-type;
+        
+                    description
+                    "The output action.add,modify,delete";
+                }
+                leaf dilimitation-vlan-id {
+                    type uint32;
+            
+                    description
+                        "The changed vlan id of ac port.";
+                }
+                leaf vlan-priority {
+                    type uint8;
+        
+                    description
+                        "The changed vlan priority of ac port.";
+                }
+                leaf vlan-dei {
+                    type uint8;
+        
+                    description
+                        "The changed dei of ac port.";
+                }
+                leaf vlan-tpid {
+                    type tpid-type;
+                
+                    description
+                        "The changed tpid of ac port.";
+                }
+                
+            }
+
+        }
+    }
+              
+    augment "/of-config:capable-switch/of-config:resources" {
+        ext:augment-identifier "vsi-augmentation";
+        uses vsi-grouping;
+    }
+
+    augment "/of-config:capable-switch/of-config:resources" {
+        ext:augment-identifier "tunnel-augmentation";
+        uses tunnel-grouping;
+    }
+
+    augment "/of-config:capable-switch/of-config:resources" {
+        ext:augment-identifier "pw-augmentation";
+        uses pw-grouping;
+    }
+
+    augment "/of-config:capable-switch/of-config:resources" {
+        ext:augment-identifier "ac-augmentation";
+        uses ac-grouping;
+    }
+
+ }
