@@ -9,7 +9,7 @@ module of-config-1.2-sptn-link-oam {
   contact "SPTN OpenFlow Extensions";
   description "SPTN Device Yang Module";
 
-  revision "2019-06-06" {
+  revision "2019-12-27" {
     description "initial";
     reference "sptn openflow extensions draft";
   }
@@ -74,28 +74,34 @@ module of-config-1.2-sptn-link-oam {
       }
   }
 
-  typedef loopback-type {
+  typedef loopback-cmd-type {
+    type enumeration {
+        enum "initiatingLoopback" {
+          value 1;
+        } 
+        enum "terminatingLoopback" {
+          value 2;
+        } 
+      }
+  }
+  
+    typedef loopback-status-type {
     type enumeration {
         enum "noLoopback" {
           value 1;
         }
-        enum "initiatingLoopback" {
-          value 2;
-        } 
         enum "remoteLoopback"{
+          value 2;
+        }
+        enum "localLoopback"{
           value 3;
         }
-        enum "terminatingLoopback" {
-          value 4;
-        } 
-        enum "localLoopback"{
-          value 5;
-        }
         enum "unknown" {
-          value 6;
+          value 4;
         } 
       }
   }
+
 
   typedef handing-type {
     type enumeration {
@@ -209,11 +215,17 @@ module of-config-1.2-sptn-link-oam {
     container oam-loopback {
       description
         "The oam loopback information.";
-      leaf loopback-status {
-        type loopback-type;
+      leaf loopback-cmd {
+        type loopback-cmd-type;
       
         description
-          "The loopback status can be configed.";
+          "The loopback  command.";
+      }
+      leaf loopback-status {
+        type loopback-status-type;
+		config false;
+        description
+          "The loopback status.";
       }
       leaf rx-handing {
         type handing-type;
